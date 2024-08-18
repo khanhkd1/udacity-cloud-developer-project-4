@@ -120,11 +120,12 @@ export function Todos() {
     useEffect(() => {
         async function foo() {
             try {
+                console.log('Fetching todos')
                 const accessToken = await getAccessTokenSilently({
                     audience: `https://${domain}/api/v2/`,
-                    scope: 'read:todos'
+                    scope: 'read:todo'
                 })
-                // console.log('Access token: ' + accessToken)
+                console.log('Access token: ' + accessToken)
                 const todos = await getTodos(accessToken)
                 setTodos(todos)
                 setLoadingTodos(false)

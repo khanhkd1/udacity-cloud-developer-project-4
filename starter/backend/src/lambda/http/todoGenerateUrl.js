@@ -10,7 +10,8 @@ export const handler = middy()
     .use(httpErrorHandler())
     .use(
         cors({
-            credentials: true
+            credentials: true,
+            origin: '*'
         })
     )
     .handler(async (ev) => {
