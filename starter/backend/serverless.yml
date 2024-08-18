@@ -1,8 +1,8 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
 org: khanhkd1
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
-app: khanhkd1-todo-app
-service: khanhkd1-todo-app
+app: khanhkd1-todo-app-4
+service: khanhkd1-todo-app-4
 
 plugins:
   - serverless-iam-roles-per-function
@@ -16,9 +16,9 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
   environment:
-    TODOS_TABLE: project-4-todos-${self:provider.stage}
+    TODOS_TABLE: Todos-${self:provider.stage}
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    TODO_ATTACHMENTS_S3_BUCKET: project-4-todo-bucket-${self:provider.stage}
+    TODO_ATTACHMENTS_S3_BUCKET: todos-khanhkd1-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
     AUTH0_CERTIFICATE: '-----BEGIN CERTIFICATE-----
 MIIDHTCCAgWgAwIBAgIJJozdy1khrXJ3MA0GCSqGSIb3DQEBCwUAMCwxKjAoBgNV
@@ -44,8 +44,8 @@ functions:
   Auth:
     handler: src/lambda/auth/Auth0Authorizer.handler
 
-  TodosGet:
-    handler: src/lambda/http/todosGet.handler
+  GetTodos:
+    handler: src/lambda/http/getTodos.handler
     events:
       - http:
           authorizer: Auth
@@ -62,8 +62,8 @@ functions:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX}
 
-  TodoCreate:
-    handler: src/lambda/http/todoCreate.handler
+  CreateTodo:
+    handler: src/lambda/http/createTodo.handler
     events:
       - http:
           authorizer: Auth
@@ -79,8 +79,8 @@ functions:
           - dynamodb:PutItem
         Resource: !GetAtt TodosTable.Arn
 
-  TodoDelete:
-    handler: src/lambda/http/todoDelete.handler
+  DeleteTodo:
+    handler: src/lambda/http/deleteTodo.handler
     events:
       - http:
           authorizer: Auth
@@ -93,8 +93,8 @@ functions:
           - dynamodb:DeleteItem
         Resource: !GetAtt TodosTable.Arn
 
-  TodoUpdate:
-    handler: src/lambda/http/todoUpdate.handler
+  UpdateTodo:
+    handler: src/lambda/http/updateTodo.handler
     events:
       - http:
           authorizer: Auth
@@ -110,8 +110,8 @@ functions:
           - dynamodb:UpdateItem
         Resource: !GetAtt TodosTable.Arn
 
-  TodoGenerateUrl:
-    handler: src/lambda/http/todoGenerateUrl.handler
+  GenerateUploadUrl:
+    handler: src/lambda/http/generateUploadUrl.handler
     events:
       - http:
           authorizer: Auth
