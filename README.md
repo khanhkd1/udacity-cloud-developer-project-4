@@ -1,3 +1,1 @@
-# My Todos App
-This is project 4th in Cloud Developer course in Udacity
- 
+Public URL: https://upgraded-enigma-7wrqq4wrjvcrwwj-3000.app.github.dev/
