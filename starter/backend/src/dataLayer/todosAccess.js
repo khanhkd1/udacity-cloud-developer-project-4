@@ -9,7 +9,7 @@ const todosTable = process.env.TODOS_TABLE
 const todosIndex = process.env.TODOS_CREATED_AT_INDEX
 const attachmentsS3Bucket = process.env.TODO_ATTACHMENTS_S3_BUCKET
 
-export async function getDbTodoAccess(userId) {
+export async function getAllTodoItems(userId) {
   return await dynamoDbClient.query({
     TableName: todosTable,
     KeyConditionExpression: 'userId = :userId',
@@ -21,14 +21,14 @@ export async function getDbTodoAccess(userId) {
   })
 }
 
-export async function createDbTodoAccess(todo) {
+export async function createTodoItem(todo) {
   await dynamoDbClient.put({
     TableName: todosTable,
     Item: todo
   })
 }
 
-export async function updateDbTodoAccess(userId, todoId, updatedTodo) {
+export async function updateTodoItem(userId, todoId, updatedTodo) {
   await dynamoDbClient.update({
     TableName: todosTable,
     Key: {
@@ -42,7 +42,7 @@ export async function updateDbTodoAccess(userId, todoId, updatedTodo) {
   })
 }
 
-export async function updateDbTodoAttachmentUrlAccess(userId, todoId, imageId) {
+export async function updateTodoAttachmentUrl(userId, todoId, imageId) {
   await dynamoDbClient.update({
     TableName: todosTable,
     Key: {
@@ -56,7 +56,7 @@ export async function updateDbTodoAttachmentUrlAccess(userId, todoId, imageId) {
   })
 }
 
-export async function deleteDbTodoAccess(userId, todoId) {
+export async function deleteTodoItem(userId, todoId) {
   await dynamoDbClient.delete({
     TableName: todosTable,
     Key: {

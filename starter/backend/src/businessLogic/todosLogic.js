@@ -1,11 +1,11 @@
 import {
-  createDbTodoAccess,
-  deleteDbTodoAccess,
-  getDbTodoAccess,
-  updateDbTodoAccess,
-  updateDbTodoAttachmentUrlAccess
-} from '../data-layer/todosAccess.js'
-import { pushImgToS3 } from '../storage-img/imageS3.js'
+  createTodoItem,
+  deleteTodoItem,
+  getAllTodoItems,
+  updateTodoItem,
+  updateTodoAttachmentUrl
+} from '../dataLayer/todosAccess.js'
+import { pushImgToS3 } from '../fileStorage/imageS3.js'
 import { v4 as uuidv4 } from 'uuid'
 import dateFormat from 'dateformat'
 import { decode } from 'jsonwebtoken'
@@ -29,7 +29,7 @@ const getDatetime = () => {
 
 export async function getTodoLogic(event) {
   const userId = getUserId(event)
-  const result = await getDbTodoAccess(userId)
+  const result = await getAllTodoItems(userId)
 
   return result.Items
 }
@@ -45,7 +45,7 @@ export async function createTodoLogic(event) {
     createdAt: getDatetime(),
     done: false
   }
-  await createDbTodoAccess(todo)
+  await createTodoItem(todo)
   return todo
 }
 
@@ -54,7 +54,7 @@ export async function addAttachMentLogic(event) {
   const todoId = event.pathParameters.todoId
   const imageId = uuidv4()
   const url = await pushImgToS3(imageId)
-  await updateDbTodoAttachmentUrlAccess(userId, todoId, imageId)
+  await updateTodoAttachmentUrl(userId, todoId, imageId)
   return url
 }
 
@@ -62,7 +62,7 @@ export async function updateTodoLogic(event) {
   const userId = getUserId(event)
   const todoId = event.pathParameters.todoId
   const updatedTodo = JSON.parse(event.body)
-  await updateDbTodoAccess(userId, todoId, updatedTodo)
+  await updateTodoItem(userId, todoId, updatedTodo)
   return {
     todoId: todoId,
     done: updatedTodo.done
@@ -72,6 +72,6 @@ export async function updateTodoLogic(event) {
 export async function deleteTodoLogic(event) {
   const todoId = event.pathParameters.todoId
   const userId = getUserId(event)
-  await deleteDbTodoAccess(userId, todoId)
+  await deleteTodoItem(userId, todoId)
   return todoId
 }
